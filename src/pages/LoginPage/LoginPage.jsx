@@ -8,6 +8,8 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [seller, setSeller] = useState(false);
+  const [buyer, setBuyer] = useState(false);
 
   const navigate = useNavigate();
 
@@ -15,10 +17,23 @@ function LoginPage() {
 
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
+  const handleSeller = (e) => {
+    if (!seller) {
+      setSeller(true);
+      setBuyer(false); 
+    }
+  };
+  
+  const handleBuyer = (e) => {
+    if (!buyer) {
+      setBuyer(true);
+      setSeller(false); 
+    }
+  };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    const requestBody = { email, password };
+    const requestBody = { email, password, seller, buyer };
 
     // Send a request to the server using axios
 
@@ -55,6 +70,26 @@ function LoginPage() {
           value={password}
           onChange={handlePassword}
         />
+
+        <label>Account type:</label>
+        <div>
+          <input
+            type="radio"
+            id="seller"
+            name="sellerOrBuyer"
+            value={seller}
+            onChange={handleSeller}
+          />
+          <label for="seller">Seller</label>
+          <input
+            type="radio"
+            id="buyer"
+            name="sellerOrBuyer"
+            value={buyer}
+            onChange={handleBuyer}
+          />
+          <label for="buyer">Buyer</label>
+        </div>
 
         <button type="submit">Login</button>
       </form>
