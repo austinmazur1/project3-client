@@ -9,6 +9,8 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import Navbar from "./components/Navbar/Navbar";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
+import AddProductPage from "./pages/AddProductPage";
+
 
 function App() {
   return (
@@ -43,6 +45,14 @@ function App() {
             </IsAnon>
           }
         />
+
+        <Route
+          path="/seller/new-product"
+          element={
+              <AddProductPage />
+          }
+        />
+
       </Routes>
     </div>
   );
