@@ -87,20 +87,32 @@ export default AddProductPage;
 import { useState } from "react";
 import axios from "axios";
 import React, { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+// import { useDropzone } from "react-dropzone";
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [startingPrice, setStartingPrice] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    setImages(acceptedFiles);
-  }, []);
+  //try this when we figure out how to add multiple images
+  // const [images, setImages] = useState([]); 
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  // const onDrop = useCallback((acceptedFiles) => {
+  //   setImages(acceptedFiles);
+  // }, []);
+
+  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const handleFileChange = (e) => {
+    setSelectedImage(e.target.files[0]);
+    console.log(e.target.files[0])
+    // console.log(e)
+    // console.log(e.target)
+  } 
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -109,10 +121,11 @@ function AddProductPage() {
     formData.append("description", description);
     formData.append("startingPrice", startingPrice);
     formData.append("duration", duration);
+    formData.append("image", selectedImage);
 
-    images.forEach((image, index) => {
-      formData.append(`image${index}`, image);
-    });
+    // images.forEach((image, index) => {
+    //   formData.append(`image${index}`, image);
+    // });
 
     axios
       .post(`${process.env.REACT_APP_SERVER_URL}/seller/new-product`, formData)
@@ -121,7 +134,9 @@ function AddProductPage() {
         setDescription("");
         setStartingPrice(0);
         setDuration(0);
-        setImages([]);
+        setSelectedImage(null);
+        // setImages([]);
+        // console.log("form data",formData)
       });
   };
 
@@ -161,14 +176,16 @@ function AddProductPage() {
         />
 
         <label>Images</label>
-        <div {...getRootProps()} className="dropzone">
+        {/* <div {...getRootProps()} className="dropzone">
           <input {...getInputProps()} />
           {isDragActive ? (
             <p>Drop the files here...</p>
           ) : (
             <p>Drag and drop some files here, or click to select files</p>
           )}
-        </div>
+        </div> */}
+
+        <input onChange={handleFileChange} type="file" id="file-input" name="ImageStyle"/>
 
         <button type="submit">Upload product</button>
       </form>
