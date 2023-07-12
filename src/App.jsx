@@ -11,7 +11,6 @@ import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 import AddProductPage from "./pages/AddProductPage";
 
-
 function App() {
   return (
     <div className="App">
@@ -46,13 +45,15 @@ function App() {
           }
         />
 
+          {/* isPrivate doesnt all to go to add product page unless signed in */}
         <Route
           path="/seller/new-product"
           element={
+            <IsPrivate>
               <AddProductPage />
+            </IsPrivate>
           }
         />
-
       </Routes>
     </div>
   );
