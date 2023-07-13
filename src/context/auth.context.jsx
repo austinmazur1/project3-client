@@ -41,7 +41,12 @@ function AuthProviderWrapper(props) {
             console.error("Error verifying token:", error);
           }
         });
-    } 
+    } else {
+      setIsLoading(false)
+      setIsLoggedIn(false);
+      setIsLoading(false);
+      setUser(null);
+    }
   };
 
   const removeToken = () => {
