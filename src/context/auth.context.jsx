@@ -25,13 +25,24 @@ function AuthProviderWrapper(props) {
         })
         .then((response) => {
           const user = response.data;
-
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
+        })
+        .catch((error) => {
+          // If the response status is 401 (Unauthorized), the token has expired
+          if (error.response && error.response.status === 401) {
+            removeToken();
+            setIsLoggedIn(false);
+            setIsLoading(false);
+            setUser(null);
+          } else {
+            // Handle other errors as needed
+            console.error("Error verifying token:", error);
+          }
         });
     } else {
-      // If the token is not available
+      setIsLoading(false)
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);

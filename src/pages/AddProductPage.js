@@ -87,6 +87,7 @@ export default AddProductPage;
 import { useState } from "react";
 import axios from "axios";
 import React, { useCallback } from "react";
+import { AuthContext } from "../context/auth.context";
 // import { useDropzone } from "react-dropzone";
 
 function AddProductPage() {
@@ -97,8 +98,7 @@ function AddProductPage() {
   const [selectedImage, setSelectedImage] = useState(null);
 
   //try this when we figure out how to add multiple images
-  // const [images, setImages] = useState([]); 
-
+  // const [images, setImages] = useState([]);
 
   // const onDrop = useCallback((acceptedFiles) => {
   //   setImages(acceptedFiles);
@@ -108,11 +108,10 @@ function AddProductPage() {
 
   const handleFileChange = (e) => {
     setSelectedImage(e.target.files[0]);
-    console.log(e.target.files[0])
+    console.log(e.target.files[0]);
     // console.log(e)
     // console.log(e.target)
-  } 
-
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -128,7 +127,16 @@ function AddProductPage() {
     // });
 
     axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/seller/new-product`, formData)
+      .post(
+        `${process.env.REACT_APP_SERVER_URL}/seller/new-product`,
+        formData,
+        {
+          // added this to get access to user data when we upload product
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      )
       .then((response) => {
         setProductName("");
         setDescription("");
@@ -141,55 +149,64 @@ function AddProductPage() {
   };
 
   return (
-    <div>
-      Add New Product
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
-          type="text"
-          name="productName"
-          onChange={(e) => setProductName(e.target.value)}
-          value={productName}
-        />
-        <label>Description</label>
-        <input
-          type="text"
-          name="description"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-        />
+    <AuthContext.Consumer>
+      {({ isLoggedIn, user }) => (
+        <div>
+          Add New Product
+          <form onSubmit={handleSubmit}>
+            <label>Name</label>
+            <input
+              type="text"
+              name="productName"
+              onChange={(e) => setProductName(e.target.value)}
+              value={productName}
+            />
+            <label>Description</label>
+            <input
+              type="text"
+              name="description"
+              onChange={(e) => setDescription(e.target.value)}
+              value={description}
+            />
 
-        <label>Starting Price</label>
-        <input
-          type="number"
-          name="startingPrice"
-          onChange={(e) => setStartingPrice(e.target.value)}
-          value={startingPrice}
-        />
+            <label>Starting Price</label>
+            <input
+              type="number"
+              name="startingPrice"
+              onChange={(e) => setStartingPrice(e.target.value)}
+              value={startingPrice}
+            />
 
-        <label>Duration</label>
-        <input
-          type="number"
-          name="duration"
-          onChange={(e) => setDuration(e.target.value)}
-          value={duration}
-        />
+            <label>Duration</label>
+            <input
+              type="number"
+              name="duration"
+              onChange={(e) => setDuration(e.target.value)}
+              value={duration}
+            />
 
-        <label>Images</label>
-        {/* <div {...getRootProps()} className="dropzone">
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p>Drop the files here...</p>
-          ) : (
-            <p>Drag and drop some files here, or click to select files</p>
-          )}
-        </div> */}
+            <label>Images</label>
+            {/* <div {...getRootProps()} className="dropzone">
+              <input {...getInputProps()} />
+              {isDragActive ? (
+                <p>Drop the files here...</p>
+              ) : (
+                <p>Drag and drop some files here, or click to select files</p>
+              )}
+            </div> */}
 
-        <input onChange={handleFileChange} type="file" id="file-input" name="ImageStyle"/>
+            <input
+              onChange={handleFileChange}
+              type="file"
+              id="file-input"
+              name="ImageStyle"
+            />
 
-        <button type="submit">Upload product</button>
-      </form>
-    </div>
+            <button type="submit">Upload product</button>
+          </form>
+        </div>
+      )}
+    </AuthContext.Consumer>
   );
 }
 
