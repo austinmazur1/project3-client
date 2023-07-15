@@ -14,6 +14,7 @@ import AddProductPage from "./pages/AddProductPage";
 import SellerDashboard from "./pages/Seller/SellerDashboard";
 
 import IsSeller from "./components/Role/IsSeller";
+import BuyerDashboard from "./pages/Buyer/BuyerDashboard";
 
 
 function App() {
@@ -76,7 +77,13 @@ function App() {
         <Route path="/seller" element={<IsSeller>"hello seller"</IsSeller>} />
 
         {/* TODO add buyer dash component */}
-        <Route path="/buyer" element={"hello buyer"} />
+        <Route path="/buyer/dashboard" element={
+          <BuyerDashboard />
+        } />
+{/* 
+        <Route path="/buyer/:id" element={
+
+        }/> */}
       </Routes>
     </div>
   );
