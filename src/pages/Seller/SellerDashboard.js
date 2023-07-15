@@ -21,7 +21,7 @@ function ProductListPage() {
   
   return (
     <div>
-      
+      <h1>Seller dashboard</h1>
         {products.map((product) => {
           return (
             <div  key={product._id} >
@@ -29,7 +29,9 @@ function ProductListPage() {
             </div>
           );
         })}     
-       
+        <Link to="/seller/new-product">
+            <button>Add a product</button>
+          </Link>
     </div>
   );
 }
