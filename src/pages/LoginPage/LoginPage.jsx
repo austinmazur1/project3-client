@@ -51,7 +51,7 @@ function LoginPage() {
         if (seller) {
           navigate("/seller");
         } else if (buyer) {
-          navigate("/buyer");
+          navigate("/buyer/dashboard");
         } else {
           console.log("error");
         }
