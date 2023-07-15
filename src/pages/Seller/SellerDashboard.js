@@ -26,6 +26,7 @@ function ProductListPage() {
           return (
             <div  key={product._id} >
               <h3>{product.name}</h3>
+              {console.log("hello", product.name)}
             </div>
           );
         })}     
