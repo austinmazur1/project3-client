@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 
 const AuthContext = React.createContext();
 
@@ -7,6 +8,8 @@ function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [isBuyer, setIsBuyer] = useState(false)
+  const [isSeller, setIsSeller] = useState(false)
 
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
@@ -24,10 +27,19 @@ function AuthProviderWrapper(props) {
           headers: { Authorization: `Bearer ${storedToken}` },
         })
         .then((response) => {
+
           const user = response.data;
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
+
+          if(response.data.seller) {
+            setIsBuyer(false)
+            setIsSeller(true)
+          } else {
+            setIsSeller(false)
+            setIsBuyer(true)
+          }
         })
         .catch((error) => {
           // If the response status is 401 (Unauthorized), the token has expired
@@ -46,6 +58,8 @@ function AuthProviderWrapper(props) {
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
+      setIsBuyer(false)
+      setIsSeller(false)
     }
   };
 
@@ -57,7 +71,13 @@ function AuthProviderWrapper(props) {
     // Upon logout, remove the token from the localStorage
     removeToken();
     authenticateUser();
+    setIsBuyer(false)
+    setIsSeller(false)
+
+
   };
+
+
 
   useEffect(() => {
     // Run this code once the AuthProviderWrapper component in the App loads for the first time.
@@ -74,6 +94,8 @@ function AuthProviderWrapper(props) {
         storeToken,
         authenticateUser,
         logOutUser,
+        isBuyer,
+        isSeller
       }}
     >
       {props.children}

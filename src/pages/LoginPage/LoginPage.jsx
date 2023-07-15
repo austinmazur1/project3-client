@@ -20,14 +20,14 @@ function LoginPage() {
   const handleSeller = (e) => {
     if (!seller) {
       setSeller(true);
-      setBuyer(false); 
+      setBuyer(false);
     }
   };
-  
+
   const handleBuyer = (e) => {
     if (!buyer) {
       setBuyer(true);
-      setSeller(false); 
+      setSeller(false);
     }
   };
 
@@ -41,13 +41,21 @@ function LoginPage() {
       .post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, requestBody)
       .then((response) => {
         console.log("JWT token", response.data.authToken);
-
+        console.log("Data response", response);
         storeToken(response.data.authToken);
 
         // Verify the token by sending a request
         // to the server's JWT validation endpoint.
         authenticateUser();
-        navigate("/");
+        console.log(seller)
+        if (seller) {
+          navigate("/seller");
+        } else if (buyer) {
+          navigate("/buyer");
+        } else {
+          console.log("error");
+        }
+
       })
       .catch((error) => {
         const errorDescription = error.response.data.message;

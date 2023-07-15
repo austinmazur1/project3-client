@@ -10,7 +10,11 @@ import Navbar from "./components/Navbar/Navbar";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 import AddProductPage from "./pages/AddProductPage";
+
 import SellerDashboard from "./pages/Seller/SellerDashboard";
+
+import IsSeller from "./components/Role/IsSeller";
+
 
 function App() {
   return (
@@ -46,6 +50,7 @@ function App() {
           }
         />
 
+
           {/* isPrivate doesnt all to go to add product page unless signed in */}
 
           <Route
@@ -56,6 +61,9 @@ function App() {
             </IsPrivate>
           }
           />
+
+        {/* isPrivate doesnt all to go to add product page unless signed in */}
+
         <Route
           path="/seller/new-product"
           element={
@@ -64,6 +72,11 @@ function App() {
             </IsPrivate>
           }
         />
+        {/* TODO add seller dash component */}
+        <Route path="/seller" element={<IsSeller>"hello seller"</IsSeller>} />
+
+        {/* TODO add buyer dash component */}
+        <Route path="/buyer" element={"hello buyer"} />
       </Routes>
     </div>
   );
