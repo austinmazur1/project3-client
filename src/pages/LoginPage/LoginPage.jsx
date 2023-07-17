@@ -49,9 +49,9 @@ function LoginPage() {
         authenticateUser();
         console.log(seller)
         if (seller) {
-          navigate("/seller");
+          navigate("/seller/dashboard");
         } else if (buyer) {
-          navigate("/buyer");
+          navigate("/buyer/dashboard");
         } else {
           console.log("error");
         }

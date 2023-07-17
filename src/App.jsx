@@ -14,6 +14,8 @@ import AddProductPage from "./pages/AddProductPage";
 import SellerDashboard from "./pages/Seller/SellerDashboard";
 
 import IsSeller from "./components/Role/IsSeller";
+import BuyerDashboard from "./pages/Buyer/BuyerDashboard";
+import SingleProduct from "./components/Product/SingleProduct";
 
 
 function App() {
@@ -76,7 +78,17 @@ function App() {
         <Route path="/seller" element={<IsSeller>"hello seller"</IsSeller>} />
 
         {/* TODO add buyer dash component */}
-        <Route path="/buyer" element={"hello buyer"} />
+        <Route path="/buyer/dashboard" element={
+          <IsPrivate>
+          <BuyerDashboard />
+          </IsPrivate>
+        } />
+
+        <Route path="/buyer/:id" element={
+          <IsPrivate>
+          <SingleProduct />
+          </IsPrivate>
+        }/>
       </Routes>
     </div>
   );

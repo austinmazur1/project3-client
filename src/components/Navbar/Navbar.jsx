@@ -12,12 +12,12 @@ function Navbar() {
   return (
     <nav>
       {isSeller ? (
-        <Link to="/seller">
-          <button>Home</button>
+        <Link to="/seller/dashboard">
+          <button>Dashboard</button>
         </Link>
       ) : (
-        <Link to="/buyer">
-          <button>Home</button>
+        <Link to="/buyer/dashboard">
+          <button>Dashboard</button>
         </Link>
       )}
 
