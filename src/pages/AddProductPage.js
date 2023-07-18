@@ -1,150 +1,57 @@
-/*import { useState } from "react";
-import axios from "axios";
-import React from "react";
-
-function AddProductPage() {
-  const [productName, setProductName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startingPrice, setStartingPrice] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [images, setImages] = useState([]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const body = {
-      productName: productName,
-      description: description,
-      startingPrice: startingPrice,
-      duration: duration,
-      images: [images],
-    };
-
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/seller/new-product`, body)
-      .then((response) => {
-        setProductName("");
-        setDescription("");
-        setStartingPrice(0);
-        setDuration(0);
-        setImages([]);
-      });
-  };
-
-  return (
-    <div>
-      Add Ne Product
-      <form onSubmit={handleSubmit}>
-        <label>Name</label>
-        <input
-          type="text"
-          name="productName"
-          onChange={(e) => setProductName(e.target.value)}
-          value={productName}
-        />
-        <label>Description</label>
-        <input
-          type="text"
-          name="description"
-          onChange={(e) => setDescription(e.target.value)}
-          value={description}
-        />
-
-        <label>Starting Price</label>
-        <input
-          type="number"
-          name="startingPrice"
-          onChange={(e) => setStartingPrice(e.target.value)}
-          value={startingPrice}
-        />
-
-        <label>Duration</label>
-        <input
-          type="number"
-          name="duration"
-          onChange={(e) => setDuration(e.target.value)}
-          value={duration}
-        />
-
-        <label>Images</label>
-        <input
-          type="file"
-          name="images"
-          onChange={(e) => setImages(Array.from(e.target.files))}
-          value={images}
-        />
-        
-
-        <button type="submit">Upload product</button>
-      </form>
-    </div>
-  );
-}
-
-
-export default AddProductPage;
-*/
-
 import { useState } from "react";
 import axios from "axios";
 import React, { useCallback } from "react";
 import { AuthContext } from "../context/auth.context";
-// import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [startingPrice, setStartingPrice] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
 
-  //try this when we figure out how to add multiple images
-  // const [images, setImages] = useState([]);
+  const navigate = useNavigate();
 
-  // const onDrop = useCallback((acceptedFiles) => {
-  //   setImages(acceptedFiles);
-  // }, []);
+  const handleFileUpload = (e) => {
+    console.log("e.target files", e.target.files[0]);
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("imageUrl", file);
 
-  // const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  const handleFileChange = (e) => {
-    setSelectedImage(e.target.files[0]);
-    console.log(e.target.files[0]);
-    // console.log(e)
-    // console.log(e.target)
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/upload`, formData)
+      .then((res) => {
+        const imageUrl = res.data.fileUrl;
+        setImageUrl(imageUrl);
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("productName", productName);
-    formData.append("description", description);
-    formData.append("startingPrice", startingPrice);
-    formData.append("duration", duration);
-    formData.append("image", selectedImage);
 
-    // images.forEach((image, index) => {
-    //   formData.append(`image${index}`, image);
-    // });
-
+    const data = {
+      productName,
+      description,
+      startingPrice,
+      duration,
+      imageUrl,
+    };
     axios
-      .post(
-        `${process.env.REACT_APP_SERVER_URL}/seller/new-product`,
-        formData,
-        {
-          // added this to get access to user data when we upload product
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      .post(`${process.env.REACT_APP_SERVER_URL}/seller/new-product`, data, {
+        // added this to get access to user data when we upload product
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
       .then((response) => {
         setProductName("");
         setDescription("");
         setStartingPrice(0);
         setDuration(0);
-        setSelectedImage(null);
-        // setImages([]);
-        // console.log("form data",formData)
+        setImageUrl("");
+        navigate("/seller/dashboard");
       });
   };
 
@@ -186,17 +93,8 @@ function AddProductPage() {
             />
 
             <label>Images</label>
-            {/* <div {...getRootProps()} className="dropzone">
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the files here...</p>
-              ) : (
-                <p>Drag and drop some files here, or click to select files</p>
-              )}
-            </div> */}
-
             <input
-              onChange={handleFileChange}
+              onChange={handleFileUpload}
               type="file"
               id="file-input"
               name="ImageStyle"
