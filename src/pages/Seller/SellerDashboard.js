@@ -21,6 +21,7 @@ function ProductListPage() {
     const renderProduct = (product) => {
       return (
         <div key={product._id}>
+          <img src={product.imageUrl} alt="product" width='200' />
                 <h1>{product.productName}</h1>
                 <p>{product.description}</p>
                 <Link to={`/seller/${product._id}`}>
