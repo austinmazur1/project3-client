@@ -1,20 +1,37 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-
 import SingleProductFetch from "../containers/SingleProductFetch";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SingleProduct = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const [currentPrice, setCurrentPrice] = useState(); 
 
-  const [currentPrice, setCurrentPrice] = useState("startingPrice");
-  const handleCurrentPrice = (e) => setCurrentPrice(e.target.value);
+  const handlePriceChange = (event) => {
+    setCurrentPrice(event.target.value);
+  };
 
-  const handleSubmit = (e) => {        
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const newMovie = { currentPrice };
- 
-    
-  }
+
+    const data = {
+      currentPrice
+    };
+    axios
+      .post(`${process.env.REACT_APP_SERVER_URL}/buyer/${id}`, data, {
+        // added this to get access to user data when we upload product
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((response) => {
+        setCurrentPrice()
+        navigate("/seller/:id");
+      });
+  };
 
   const renderProduct = (product, seller) => {
     return (
@@ -31,29 +48,25 @@ const SingleProduct = () => {
         <p>{product.currentBidder}</p>
         <h4>{seller.name}</h4>
         <h4>{seller.email}</h4>
+
+        <form onSubmit={handleSubmit}>
+          <label>
+            Bid:
+            <input type="number" value={currentPrice} placeholder={`${product.startingPrice}`} onChange={handlePriceChange} />
+          </label>
+          <button type="submit">Place a bid</button>
+        </form>
       </div>
     );
   };
 
+ 
+
   return (
-    <div>
-      <SingleProductFetch
-        url={`${process.env.REACT_APP_SERVER_URL}/buyer/${id}`}
-        render={renderProduct}
-      />
-
-      <form onSubmit={handleSubmit}>
-        <label>Bid:</label>
-        <input
-          type="number"
-          name="currentPrice"
-          value={currentPrice}
-          onChange={handleCurrentPrice}
-        />
-
-        <button type="submit">Place a bid</button>
-      </form>
-    </div>
+    <SingleProductFetch
+      url={`${process.env.REACT_APP_SERVER_URL}/buyer/${id}`}
+      render={renderProduct}
+    />
   );
 };
 
