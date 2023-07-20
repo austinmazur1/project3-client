@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 const SingleProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [currentPrice, setCurrentPrice] = useState(); 
+  const [currentPrice, setCurrentPrice] = useState(0); 
 
   const handlePriceChange = (event) => {
     setCurrentPrice(event.target.value);
   };
+
 
 
   const handleSubmit = (e) => {
@@ -29,7 +30,7 @@ const SingleProduct = () => {
       })
       .then((response) => {
         setCurrentPrice()
-        navigate("/seller/:id");
+        navigate(`/buyer/${id}`);
       });
   };
 
@@ -42,6 +43,7 @@ const SingleProduct = () => {
         <p>Current price: {product.currentPrice}</p>
         <p>Duration: {product.duration}</p>
         <p>Time left: {product.timer}</p>
+        {/* (starting date + timer duration) - current date */}
         <p>{product.auctionStarted}</p>
         <p>{product.auctionEnded}</p>
         {/* <p>{product.bids}</p> map through the bids */}
