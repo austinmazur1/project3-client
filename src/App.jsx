@@ -17,7 +17,6 @@ import IsSeller from "./components/Role/IsSeller";
 import BuyerDashboard from "./pages/Buyer/BuyerDashboard";
 import SingleProduct from "./components/Product/SingleProduct";
 
-
 function App() {
   return (
     <div className="App">
@@ -52,17 +51,16 @@ function App() {
           }
         />
 
+        {/* isPrivate doesnt all to go to add product page unless signed in */}
 
-          {/* isPrivate doesnt all to go to add product page unless signed in */}
-
-          <Route
+        <Route
           path="/seller/dashboard"
           element={
             <IsPrivate>
               <SellerDashboard />
             </IsPrivate>
           }
-          />
+        />
 
         {/* isPrivate doesnt all to go to add product page unless signed in */}
 
@@ -78,17 +76,31 @@ function App() {
         <Route path="/seller" element={<IsSeller>"hello seller"</IsSeller>} />
 
         {/* TODO add buyer dash component */}
-        <Route path="/buyer/dashboard" element={
-          <IsPrivate>
-          <BuyerDashboard />
-          </IsPrivate>
-        } />
+        <Route
+          path="/buyer/dashboard"
+          element={
+            <IsPrivate>
+              <BuyerDashboard />
+            </IsPrivate>
+          }
+        />
 
-        <Route path="/buyer/:id" element={
-          <IsPrivate>
-          <SingleProduct />
-          </IsPrivate>
-        }/>
+        <Route
+          path="/buyer/:id"
+          element={
+            <IsPrivate>
+              <SingleProduct />
+            </IsPrivate>
+          }
+        />
+        <Route
+          path="/seller/:id"
+          element={
+            <IsSeller>
+              <SingleProduct />
+            </IsSeller>
+          }
+        />
       </Routes>
     </div>
   );
