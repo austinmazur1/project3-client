@@ -5,6 +5,19 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [passwordFields, setPasswordFields] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+  const [address, setAddress] = useState({
+    country: "",
+    city: "",
+    street: "",
+    houseNumber: "",
+    additional: "",
+    zipCode: "",
+  });
 
   // Fetch user data from the backend when the component mounts
   useEffect(() => {
@@ -15,6 +28,16 @@ const ProfilePage = () => {
     try {
       const response = await axios.get("/api/user"); // Replace '/api/user' with your backend API endpoint to fetch user data
       setUserData(response.data);
+      setAddress(
+        response.data.address || {
+          country: "",
+          city: "",
+          street: "",
+          houseNumber: "",
+          additional: "",
+          zipCode: "",
+        }
+      );
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -28,6 +51,16 @@ const ProfilePage = () => {
     setEditMode(false);
     // Reset any changes made by reverting to the original user data
     fetchUserData();
+    setAddress(
+      userData.address || {
+        country: "",
+        city: "",
+        street: "",
+        houseNumber: "",
+        additional: "",
+        zipCode: "",
+      }
+    );
   };
 
   const handleSaveClick = async () => {
@@ -48,6 +81,10 @@ const ProfilePage = () => {
 
       // Update other user data (name, email, dateOfBirth, etc.)
       await axios.put("/api/user", userData); // Replace '/api/user' with your backend API endpoint to update user data
+
+      // Update the address separately
+      await axios.put("/api/user/address", address); // Replace '/api/user/address' with your backend API endpoint to update the address
+
       setEditMode(false);
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -65,6 +102,48 @@ const ProfilePage = () => {
   const handleProfilePictureChange = (event) => {
     const file = event.target.files[0];
     setProfilePicture(file);
+  };
+
+  const handlePasswordChange = (event) => {
+    const { name, value } = event.target;
+    setPasswordFields((prevFields) => ({
+      ...prevFields,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordSave = async () => {
+    try {
+      // Implement password change functionality with your backend API endpoint
+      await axios.put("/api/changePassword", passwordFields); // Replace '/api/changePassword' with your backend API endpoint for changing passwords
+      setPasswordFields({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+    } catch (error) {
+      console.error("Error changing password:", error);
+    }
+  };
+
+  const handleAddressChange = (event) => {
+    const { name, value } = event.target;
+    setAddress((prevAddress) => ({
+      ...prevAddress,
+      [name]: value,
+    }));
+  };
+
+  // Save the edited address
+  const handleAddressSave = async () => {
+    try {
+      // Update the address separately
+      await axios.put("/api/user/address", address); // Replace '/api/user/address' with your backend API endpoint to update the address
+
+      setEditMode(false);
+    } catch (error) {
+      console.error("Error updating address:", error);
+    }
   };
 
   return (
@@ -125,7 +204,101 @@ const ProfilePage = () => {
           <button onClick={handleEditClick}>Edit</button>
         )}
       </div>
-      {/* Add more sections for Contact Information, Change Password, etc. */}
+
+      {/* Change Password Section */}
+      {editMode ? (
+        <div>
+          <h2>Change Password</h2>
+          <input
+            type="password"
+            name="currentPassword"
+            placeholder="Current Password"
+            value={passwordFields.currentPassword}
+            onChange={handlePasswordChange}
+          />
+          <input
+            type="password"
+            name="newPassword"
+            placeholder="New Password"
+            value={passwordFields.newPassword}
+            onChange={handlePasswordChange}
+          />
+          <input
+            type="password"
+            name="confirmNewPassword"
+            placeholder="Confirm New Password"
+            value={passwordFields.confirmNewPassword}
+            onChange={handlePasswordChange}
+          />
+          <button onClick={handlePasswordSave}>Change Password</button>
+        </div>
+      ) : null}
+
+      {/* Address Section */}
+      <div>
+        <h2>Address</h2>
+        {editMode ? (
+          // Input fields for address in edit mode
+          <>
+            <input
+              type="text"
+              name="country"
+              placeholder="Country"
+              value={address.country}
+              onChange={handleAddressChange}
+            />
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              value={address.city}
+              onChange={handleAddressChange}
+            />
+            <input
+              type="text"
+              name="street"
+              placeholder="Street"
+              value={address.street}
+              onChange={handleAddressChange}
+            />
+            <input
+              type="text"
+              name="houseNumber"
+              placeholder="House Number"
+              value={address.houseNumber}
+              onChange={handleAddressChange}
+            />
+            <input
+              type="text"
+              name="additional"
+              placeholder="Additional Address (Optional)"
+              value={address.additional}
+              onChange={handleAddressChange}
+            />
+            <input
+              type="text"
+              name="zipCode"
+              placeholder="ZIP Code"
+              value={address.zipCode}
+              onChange={handleAddressChange}
+            />
+            <button onClick={handleAddressSave}>Save Address</button>
+          </>
+        ) : (
+          // Display address when not in edit mode
+          <>
+            <p>Country: {userData.address?.country}</p>
+            <p>City: {userData.address?.city}</p>
+            <p>Street: {userData.address?.street}</p>
+            <p>House Number: {userData.address?.houseNumber}</p>
+            {userData.address?.additional && (
+              <p>Additional: {userData.address?.additional}</p>
+            )}
+            <p>ZIP Code: {userData.address?.zipCode}</p>
+          </>
+        )}
+      </div>
+      {/* Add more sections for Contact Information, etc. */}
     </div>
   );
 };
