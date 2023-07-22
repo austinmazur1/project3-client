@@ -1,16 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
-import React, { useCallback } from "react";
+
 import { AuthContext } from "../context/auth.context";
 import { useNavigate } from "react-router-dom";
 import productService from "../services/product.service";
-
+import { useContext } from "react";
 function AddProductPage() {
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [startingPrice, setStartingPrice] = useState(0);
   const [duration, setDuration] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
+  const [serverMessage, setServerMessage] = useState('')
+  const {user} = useContext(AuthContext)
 
   const navigate = useNavigate();
 
@@ -47,8 +49,13 @@ function AddProductPage() {
         setStartingPrice(0);
         setDuration(0);
         setImageUrl("");
-        navigate("/seller/dashboard");
-      });
+        navigate(`/seller/dashboard/${user._id}`);
+      })
+      .catch((error) => {
+        if(error.response && error.response.data && error.response.data.message) {
+          setServerMessage(error.response.data.message)
+        }
+      })
   };
 
   return (
@@ -95,6 +102,7 @@ function AddProductPage() {
               id="file-input"
               name="ImageStyle"
             />
+            {serverMessage && <p>{serverMessage}</p>}
 
             <button type="submit">Upload product</button>
           </form>

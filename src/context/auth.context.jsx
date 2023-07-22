@@ -55,7 +55,6 @@ function AuthProviderWrapper(props) {
           }
         });
     } else {
-      setIsLoading(false)
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
