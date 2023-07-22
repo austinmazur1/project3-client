@@ -1,15 +1,17 @@
 import "./LoginPage.css";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import axios from "axios";
 
 function LoginPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [seller, setSeller] = useState(false);
   const [buyer, setBuyer] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -17,18 +19,15 @@ function LoginPage() {
 
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
+
   const handleSeller = (e) => {
-    if (!seller) {
-      setSeller(true);
-      setBuyer(false);
-    }
+    setSeller(e.target.checked);
+    setBuyer(false);
   };
 
   const handleBuyer = (e) => {
-    if (!buyer) {
-      setBuyer(true);
-      setSeller(false);
-    }
+    setBuyer(e.target.checked);
+    setSeller(false);
   };
 
   const handleLoginSubmit = (e) => {
@@ -42,26 +41,39 @@ function LoginPage() {
       .then((response) => {
         console.log("JWT token", response.data.authToken);
         console.log("Data response", response);
+        console.log(user);
         storeToken(response.data.authToken);
 
         // Verify the token by sending a request
         // to the server's JWT validation endpoint.
         authenticateUser();
-        console.log(seller)
+        console.log(seller);
+        console.log(buyer);
         if (seller) {
-          navigate("/seller/dashboard");
-        } else if (buyer) {
-          navigate("/buyer/dashboard");
-        } else {
-          console.log("error");
+          navigate(`/seller/dashboard/${user._id}`);
         }
-
+        if (buyer) {
+          navigate("/buyer/dashboard");
+        }
       })
       .catch((error) => {
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
+        // const errorDescription = error.response.data.message;
+        // setErrorMessage(errorDescription);
+        console.log("error", error);
       });
   };
+
+  useEffect(() => {
+    // If isLoading is false and user is not null, it means authentication is complete
+    // and we can navigate to the dashboard based on the selected account type
+    if (!isLoading && user) {
+      if (seller) {
+        navigate(`/seller/dashboard/${user._id}`);
+      } else if (buyer) {
+        navigate("/buyer/dashboard");
+      }
+    }
+  }, [isLoading, user, seller, buyer]);
 
   return (
     <div className="LoginPage">
@@ -85,7 +97,8 @@ function LoginPage() {
             type="radio"
             id="seller"
             name="sellerOrBuyer"
-            value={seller}
+            value={true}
+            checked={seller}
             onChange={handleSeller}
           />
           <label for="seller">Seller</label>
@@ -93,7 +106,8 @@ function LoginPage() {
             type="radio"
             id="buyer"
             name="sellerOrBuyer"
-            value={buyer}
+            value={true}
+            checked={buyer}
             onChange={handleBuyer}
           />
           <label for="buyer">Buyer</label>
