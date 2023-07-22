@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useCallback } from "react";
 import { AuthContext } from "../context/auth.context";
 import { useNavigate } from "react-router-dom";
+import productService from "../services/product.service";
 
 function AddProductPage() {
   const [productName, setProductName] = useState("");
@@ -19,8 +20,8 @@ function AddProductPage() {
     const formData = new FormData();
     formData.append("imageUrl", file);
 
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/upload`, formData)
+    productService
+      .imageUpload(formData)
       .then((res) => {
         const imageUrl = res.data.fileUrl;
         setImageUrl(imageUrl);
@@ -38,13 +39,8 @@ function AddProductPage() {
       duration,
       imageUrl,
     };
-    axios
-      .post(`${process.env.REACT_APP_SERVER_URL}/seller/new-product`, data, {
-        // added this to get access to user data when we upload product
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+    productService
+      .createProduct(data)
       .then((response) => {
         setProductName("");
         setDescription("");
