@@ -9,6 +9,7 @@ function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
   const [isBuyer, setIsBuyer] = useState(false)
   const [isSeller, setIsSeller] = useState(false)
 
@@ -91,6 +92,8 @@ function AuthProviderWrapper(props) {
         isLoggedIn,
         isLoading,
         user,
+        userId,
+        setUserId,
         storeToken,
         authenticateUser,
         logOutUser,
