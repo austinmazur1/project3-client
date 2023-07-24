@@ -49,7 +49,7 @@ function AddProductPage() {
         setStartingPrice(0);
         setDuration(0);
         setImageUrl("");
-        navigate(`/seller/dashboard/${user._id}`);
+        navigate("/seller/dashboard");
       })
       .catch((error) => {
         if(error.response && error.response.data && error.response.data.message) {

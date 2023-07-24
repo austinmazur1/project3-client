@@ -12,7 +12,7 @@ function Navbar() {
   return (
     <nav>
       {isSeller ? (
-        <Link to={`/seller/dashboard/${user._id}`}>
+        <Link to={"/seller/dashboard"}>
           <button>Dashboard</button>
         </Link>
       ) : (

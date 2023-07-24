@@ -12,6 +12,8 @@ function LoginPage() {
   const [seller, setSeller] = useState(false);
   const [buyer, setBuyer] = useState(false);
   const { user } = useContext(AuthContext);
+  const { setUserId } = useContext(AuthContext)
+  const { userId } = useContext(AuthContext)
 
   const navigate = useNavigate();
 
@@ -32,6 +34,12 @@ function LoginPage() {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
+
+    if(!seller && !buyer) {
+      setErrorMessage("Please select an account type (Seller or Buyer)");
+      return; 
+    };
+
     const requestBody = { email, password, seller, buyer };
 
     // Send a request to the server using axios
@@ -41,39 +49,38 @@ function LoginPage() {
       .then((response) => {
         console.log("JWT token", response.data.authToken);
         console.log("Data response", response);
-        console.log(user);
         storeToken(response.data.authToken);
 
         // Verify the token by sending a request
         // to the server's JWT validation endpoint.
-        authenticateUser();
-        console.log(seller);
-        console.log(buyer);
-        if (seller) {
-          navigate(`/seller/dashboard/${user._id}`);
-        }
-        if (buyer) {
-          navigate("/buyer/dashboard");
+        authenticateUser()
+        console.log(seller)
+        if(seller) {
+          navigate('/seller/dashboard')
+        } else if (buyer) {
+          navigate('/buyer/dashboard')
         }
       })
       .catch((error) => {
         // const errorDescription = error.response.data.message;
         // setErrorMessage(errorDescription);
         console.log("error", error);
+        setErrorMessage("Invalid credentials. Please try again.")
       });
   };
 
-  useEffect(() => {
-    // If isLoading is false and user is not null, it means authentication is complete
-    // and we can navigate to the dashboard based on the selected account type
-    if (!isLoading && user) {
-      if (seller) {
-        navigate(`/seller/dashboard/${user._id}`);
-      } else if (buyer) {
-        navigate("/buyer/dashboard");
-      }
-    }
-  }, [isLoading, user, seller, buyer]);
+  // useEffect(() => {
+  //   // If user is not null, it means authentication is complete,
+  //   // and we can navigate to the dashboard based on the selected account type
+  //   console.log(seller)
+  //   console.log(buyer)
+  //     if (seller) {
+  //       navigate("/seller/dashboard");
+  //     } else if (buyer) {
+  //       navigate("/buyer/dashboard");
+  //     }
+  // }, [seller, buyer]);
+
 
   return (
     <div className="LoginPage">
