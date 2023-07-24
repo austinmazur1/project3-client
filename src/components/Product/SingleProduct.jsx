@@ -19,7 +19,7 @@ const SingleProduct = () => {
   const [updateDescription, setUpdateDescription] = useState("");
   const { user } = useContext(AuthContext);
   const [updatedCurrentPrice, setUpdatedCurrentPrice] = useState(
-    product.currentPrice
+    product?.currentPrice
   );
   const handlePriceChange = (event) => {
     setCurrentPrice(event.target.value);
@@ -39,11 +39,11 @@ const SingleProduct = () => {
 
         const response = await productService.getSingleProductBuyer(id);
         const { product } = response.data;
-        setUpdatedCurrentPrice(product.currentPrice);
+        setUpdatedCurrentPrice(product?.currentPrice);
       } else {
         const response = await productService.getSingleProductSeller(id);
         const { product } = response.data;
-        setUpdatedCurrentPrice(product.currentPrice);
+        setUpdatedCurrentPrice(product?.currentPrice);
       }
     } catch (error) {
       console.log(error, "error fetching");
@@ -118,7 +118,7 @@ const SingleProduct = () => {
       productService.getSingleProductSeller(id).then((response) => {
         const { product, seller, currentBidder } = response.data;
         setProduct(product);
-        setCurrentPrice(product.currentPrice)
+        setCurrentPrice(product?.currentPrice)
         setCurrentBidder(currentBidder);
         setSeller(seller);
         setIsLoading(false);
@@ -127,7 +127,7 @@ const SingleProduct = () => {
       productService.getSingleProductBuyer(id).then((response) => {
         const { product, seller, currentBidder } = response.data;
         setProduct(product);
-        setCurrentPrice(product.currentPrice);
+        setCurrentPrice(product?.currentPrice);
         setCurrentBidder(currentBidder);
         setSeller(seller);
         setIsLoading(false);

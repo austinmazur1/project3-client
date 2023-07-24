@@ -23,7 +23,11 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        {/* <Route path="/" element={
+        <IsPrivate>
+        <HomePage />
+        </IsPrivate>
+        } /> */}
 
         <Route
           path="/profile"
@@ -54,7 +58,7 @@ function App() {
         {/* isPrivate doesnt all to go to add product page unless signed in */}
 
         <Route
-          path="/seller/dashboard/:id"
+          path="/seller/dashboard"
           element={
             <IsPrivate>
               <SellerDashboard />

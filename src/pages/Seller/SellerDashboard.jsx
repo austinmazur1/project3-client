@@ -1,25 +1,57 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import productService from "../../services/product.service";
 import { AuthContext } from "../../context/auth.context";
 
 function ProductListPage() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext)
+  // const { userId } = useContext(AuthContext);
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
-  const getAllProducts = () => {
-    productService
-      .getAllProductsSeller(user._id)
-      .then((response) => {
-        console.log(response.data);
-        setProducts(response.data);
-      })
-      .catch((error) => console.log(error));
-  };
+  const userId = user && user._id
 
+  console.log("userId", userId)
+  
+  
   useEffect(() => {
+    console.log("userId", userId)
+    
+    const getAllProducts = async () => {
+      try {
+        const response = await productService
+        .getAllProductsSeller(userId);
+        console.log(response.data)
+        setProducts(response.data)
+      } catch (error) {
+        console.log(error)
+      }
+      
+      
+    }
     getAllProducts();
-  }, []);
+    
+}, [userId])
+
+  // const getAllProducts = async () => {
+  //   console.log(userId)
+  //   productService
+  //     .getAllProductsSeller(userId)
+  //     .then((response) => {
+
+  //       console.log(response.data);
+  //       setProducts(response.data);
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
+
+  // useEffect(() => {
+  //   getAllProducts();
+    
+  // }, []);
+
+
+
 
   return (
     <div>

@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 class ProductService {
   constructor() {
     this.api = axios.create({
@@ -37,8 +38,14 @@ class ProductService {
   }
 
   // GET /api/examples
-  getAllProductsSeller = async (id) => {
-    return this.api.get(`/seller/dashboard/${id}`);
+  getAllProductsSeller = async (userId) => {
+    console.log(userId)
+    return this.api.get("/seller/dashboard", {
+      params: {
+        userId: userId
+      }
+    });
+
   }
   getAllProductsBuyer = async () => {
     return this.api.get('/buyer/dashboard');
