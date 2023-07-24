@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import productService from "../../services/product.service";
 import Loading from "../Loading/Loading";
+import CountdownTimer from "../CountdownTimer/CountdownTimer";
 
 const SingleProduct = () => {
   const navigate = useNavigate();
@@ -61,7 +62,6 @@ const SingleProduct = () => {
     };
   }, []);
 
-  console.log(user)
 
   const handleBid = (e) => {
     e.preventDefault();
@@ -157,7 +157,7 @@ const SingleProduct = () => {
       ) : (
         <p>No bidders</p>
       )}
-
+      <CountdownTimer productId={id} timer={product.timer}/>
       {!user.seller ? (
         <>
           <h4>Seller: {seller.name}</h4>
