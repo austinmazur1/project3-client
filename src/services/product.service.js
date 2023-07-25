@@ -64,8 +64,15 @@ class ProductService {
     return this.api.put(`/seller/${id}`, update);
   }
 
-  updateWinner = async (id) => {
-    return this.api.post(`/buyer/${id}`)
+  updateWinner = async (id, currentBidder) => {
+    try{
+      const response = await this.api.put(`/buyer/${id}`, {
+        buyer: currentBidder,
+      productId: id
+      })
+    } catch(error) {
+      throw error
+    }
   }
 
   // DELETE /api/examples/:id

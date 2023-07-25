@@ -12,6 +12,7 @@ const SingleProduct = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState({});
   const [seller, setSeller] = useState({});
+  const [winner, setWinner] = useState(null);
   const [currentBidder, setCurrentBidder] = useState(null);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [message, setMessage] = useState("");
@@ -67,30 +68,44 @@ const SingleProduct = () => {
 //   console.log('you won');
 //   // Send user an email?
 //   productService
-//   .updateWinner()
-
+//   .updateWinner(id, currentBidder)
+//   .then(() => {
+//     setWinner(currentBidder)
+//   })
+//   .catch((error) => {
+//     console.log(error)
+//   })
 // }
 
-  const handleBid = (e) => {
-    e.preventDefault();
-    productService
-      .updateBid(id, currentPrice, user._id)
-      .then(() => {
-        setCurrentPrice(currentPrice);
-        console.log(typeof currentPrice);
-      })
-      .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          setServerMessage(error.response.data.message);
-        }
-        console.error("Error updating bid:", error);
-      })
-      .finally(setServerMessage(""));
-  };
+
+
+const handleBid = (e) => {
+  e.preventDefault();
+  productService
+    .updateBid(id, currentPrice, user._id)
+    .then(() => {
+      setCurrentPrice(currentPrice);
+      console.log(typeof currentPrice);
+    })
+    .catch((error) => {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setServerMessage(error.response.data.message); // Set the error message from the API response
+      } else {
+        setServerMessage("Error updating bid"); // Set a generic error message if no specific message is available
+      }
+      console.error("Error updating bid:", error);
+    })
+    .finally(() => {
+      // Clear the server message after some time
+      setTimeout(() => {
+        setServerMessage("");
+      }, 5000);
+    });
+};
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -114,7 +129,7 @@ const SingleProduct = () => {
     productService
       .deleteProject(id)
       .then(() => {
-        navigate(`/seller/dashboard/${user._id}`);
+        navigate("/seller/dashboard");
       })
       .catch((error) => {
         console.error("Error deleting product:", error);
@@ -157,7 +172,7 @@ const SingleProduct = () => {
       <p>Starting price: {product.startingPrice}</p>
       <p>Current price: {updatedCurrentPrice}</p>
       <p>Duration: {product.duration} Minutes</p>
-      <p>Time left: {<CountdownTimer productId={id} timer={product.timer} />}</p>
+      <p>Time left: {<CountdownTimer productId={id} timer={product.timer} currentBidder={currentBidder} />}</p>
       <p>{product.auctionStarted}</p>
       <p>{product.auctionEnded}</p>
       {currentBidder ? (

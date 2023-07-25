@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-const CountdownTimer = ({ productId, timer, handleWinner }) => {
+import productService from "../../services/product.service";
+const CountdownTimer = ({ productId, timer, }) => {
   // const storedRemainingTime = localStorage.getItem(
   //   `product_${productId}_remainingTime`
   // );
@@ -53,6 +53,28 @@ const CountdownTimer = ({ productId, timer, handleWinner }) => {
     const result = expirationDate - date;
     setCountdown(result);
   }, 1000);
+  
+  // useEffect(() => {
+  //   // Check if countdown reaches zero
+  //   if (countdown <= 0) {
+  //     handleWinner();
+  //   }
+  // }, [countdown]);
+
+  const handleWinner = () => {
+    console.log('you won');
+    // Send user an email?
+    productService
+      .updateWinner(productId, currentBidder)
+      .then(() => {
+        // Handle any other logic when the winner is updated
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+      
+    
 
   const formatTime = (timeInMilliseconds) => {
     const totalSeconds = Math.floor(timeInMilliseconds / 1000);
@@ -74,6 +96,7 @@ const CountdownTimer = ({ productId, timer, handleWinner }) => {
       <p>{countdown > 0 ? formatTime(countdown) : "Product expired"}</p>
     </div>
   );
-};
+  }
+
 
 export default CountdownTimer;
