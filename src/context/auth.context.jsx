@@ -10,8 +10,8 @@ function AuthProviderWrapper(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [isBuyer, setIsBuyer] = useState(false)
-  const [isSeller, setIsSeller] = useState(false)
+  const [isBuyer, setIsBuyer] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
 
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
@@ -29,18 +29,17 @@ function AuthProviderWrapper(props) {
           headers: { Authorization: `Bearer ${storedToken}` },
         })
         .then((response) => {
-
           const user = response.data;
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
 
-          if(response.data.seller) {
-            setIsBuyer(false)
-            setIsSeller(true)
+          if (response.data.seller) {
+            setIsBuyer(false);
+            setIsSeller(true);
           } else {
-            setIsSeller(false)
-            setIsBuyer(true)
+            setIsSeller(false);
+            setIsBuyer(true);
           }
         })
         .catch((error) => {
@@ -59,8 +58,8 @@ function AuthProviderWrapper(props) {
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
-      setIsBuyer(false)
-      setIsSeller(false)
+      setIsBuyer(false);
+      setIsSeller(false);
     }
   };
 
@@ -72,13 +71,10 @@ function AuthProviderWrapper(props) {
     // Upon logout, remove the token from the localStorage
     removeToken();
     authenticateUser();
-    setIsBuyer(false)
-    setIsSeller(false)
-    navigate('/login')
-
+    setIsBuyer(false);
+    setIsSeller(false);
+    navigate("/login");
   };
-
-
 
   useEffect(() => {
     // Run this code once the AuthProviderWrapper component in the App loads for the first time.
@@ -98,7 +94,7 @@ function AuthProviderWrapper(props) {
         authenticateUser,
         logOutUser,
         isBuyer,
-        isSeller
+        isSeller,
       }}
     >
       {props.children}

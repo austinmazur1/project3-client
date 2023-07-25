@@ -46,12 +46,21 @@ function LoginPage() {
 
         // Verify the token by sending a request
         // to the server's JWT validation endpoint.
+
+        authenticateUser()
+        console.log(seller)
+        if(seller) {
+          navigate('/seller/dashboard')
+        } else {
+          navigate('/buyer/dashboard')
+
         authenticateUser();
 
         if (seller) {
           navigate("/seller/dashboard");
         } else if (buyer) {
           navigate("/buyer/dashboard");
+
         }
       })
       .catch((error) => {
