@@ -49,7 +49,7 @@ function SignupPage() {
         <img
           className="mx-auto h-30 w-auto"
           src="AuctionEra Logo - white back.png"
-          alt="Your Company"
+          alt="AuctionEra"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign Up
