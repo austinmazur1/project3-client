@@ -62,6 +62,7 @@ function LoginPage() {
           navigate("/buyer/dashboard");
 
         }
+      }
       })
       .catch((error) => {
         console.log("error", error);
