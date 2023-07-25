@@ -57,7 +57,7 @@ function LoginPage() {
         console.log(seller)
         if(seller) {
           navigate('/seller/dashboard')
-        } else if (buyer) {
+        } else {
           navigate('/buyer/dashboard')
         }
       })

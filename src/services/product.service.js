@@ -64,6 +64,10 @@ class ProductService {
     return this.api.put(`/seller/${id}`, update);
   }
 
+  updateWinner = async (id) => {
+    return this.api.post(`/buyer/${id}`)
+  }
+
   // DELETE /api/examples/:id
   deleteProject = async (id) => {
     return this.api.delete(`/seller/${id}`);

@@ -87,7 +87,7 @@ function AddProductPage() {
               value={startingPrice}
             />
 
-            <label>Duration</label>
+            <label>Duration in minutes</label>
             <input
               type="number"
               name="duration"
