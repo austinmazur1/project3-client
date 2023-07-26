@@ -66,10 +66,9 @@ class ProductService {
 
   updateWinner = async (id, currentBidder) => {
     try{
-      const response = await this.api.put(`/buyer/${id}`, {
-        buyer: currentBidder,
-      productId: id
-      })
+      const data = {currentBidder: currentBidder._id};
+      const response = await this.api.put(`/buyer/${id}`, data);
+      return response.data
     } catch(error) {
       throw error
     }

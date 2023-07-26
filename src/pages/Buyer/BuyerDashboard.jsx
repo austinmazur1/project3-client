@@ -20,11 +20,21 @@ function BuyerDashboard() {
     getAllProducts();
   }, []);
 
+  const isCountdownExpired = (expirationDate) => {
+    const currentData = new Date().getTime();
+    return expirationDate <= currentData;
+  };
+
+  const activeProducts = products.filter(
+    (product) => !product.sold && !product.auctionEnded
+  );
+
+
   return (
     <div>
       <h1>Buyer dashboard</h1>
       <div>
-        {products.map((product) => (
+        {activeProducts.map((product) => (
           <div key={product._id}>
             <img src={product.imageUrl} alt={product.productName} />
             <h1>{product.productName}</h1>

@@ -63,21 +63,20 @@ const SingleProduct = () => {
     };
   }, []);
 
-
-// const handleWinner = () => {
-//   console.log('you won');
-//   // Send user an email?
-//   productService
-//   .updateWinner(id, currentBidder)
-//   .then(() => {
-//     setWinner(currentBidder)
-//   })
-//   .catch((error) => {
-//     console.log(error)
-//   })
-// }
-
-
+  const handleWinner = () => {
+    console.log('you won');
+    // Send user an email?
+    productService
+      .updateWinner(id, currentBidder)
+      .then(() => {
+        // Handle any other logic when the winner is updated
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+      
+    
 
 const handleBid = (e) => {
   e.preventDefault();
@@ -172,7 +171,7 @@ const handleBid = (e) => {
       <p>Starting price: {product.startingPrice}</p>
       <p>Current price: {updatedCurrentPrice}</p>
       <p>Duration: {product.duration} Minutes</p>
-      <p>Time left: {<CountdownTimer productId={id} timer={product.timer} currentBidder={currentBidder} />}</p>
+      <p>Time left: {<CountdownTimer handleWinner={handleWinner} productId={id} timer={product.timer} currentBidder={currentBidder} />}</p>
       <p>{product.auctionStarted}</p>
       <p>{product.auctionEnded}</p>
       {currentBidder ? (
