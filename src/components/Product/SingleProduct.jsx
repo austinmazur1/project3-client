@@ -52,16 +52,16 @@ const SingleProduct = () => {
     }
   };
 
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchUpdatedCurrentPrice();
-      setServerMessage("");
-    }, 5000); // Fetch updated current price every 5 seconds
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetchUpdatedCurrentPrice();
+  //     setServerMessage("");
+  //   }, 5000); // Fetch updated current price every 5 seconds
 
-    return () => {
-      clearInterval(intervalId); // Clear the interval when the component unmounts
-    };
-  }, []);
+  //   return () => {
+  //     clearInterval(intervalId); // Clear the interval when the component unmounts
+  //   };
+  // }, []);
 
   const handleWinner = () => {
     console.log('you won');

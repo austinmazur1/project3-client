@@ -46,7 +46,7 @@ const CountdownTimer = ({ productId, timer, handleWinner }) => {
 
   useEffect(() => {
     if (countdown <= 0) {
-      handleWinner();
+      // handleWinner();
       console.log('done')
     }
   }, [countdown]);
