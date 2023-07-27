@@ -69,7 +69,7 @@ function LoginPage() {
           alt="Your Company"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-red-700">
-          Sign in to your account
+          Log in to your account
         </h2>
       </div>
 
@@ -150,7 +150,7 @@ function LoginPage() {
             type="submit"
             className="flex w-full justify-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Sign in
+            Login
           </button>
         </form>
 
