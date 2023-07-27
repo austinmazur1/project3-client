@@ -1,39 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import productService from "../../services/product.service";
 const CountdownTimer = ({ productId, timer, handleWinner }) => {
-  // const storedRemainingTime = localStorage.getItem(
-  //   `product_${productId}_remainingTime`
-  // );
-  // const [remainingTime, setRemainingTime] = useState(
-  //   storedRemainingTime ? Number(storedRemainingTime) : timer
-  // );
 
-  // useEffect(() => {
-  //   // Save the remaining time in localStorage whenever it changes
-  //   localStorage.setItem(
-  //     `product_${productId}_remainingTime`,
-  //     remainingTime.toString()
-  //   );
-
-  //   if (remainingTime === 0) {
-  //     handleWinner()
-  //   }
-  // }, [productId, remainingTime]);
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setRemainingTime((prevRemainingTime) =>
-  //       prevRemainingTime > 0 ? prevRemainingTime - 1 : 0
-  //     );
-  //   }, 1000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [productId]);
   const [expirationDate, setExpirationDate] = useState(0);
   const [countdown, setCountdown] = useState(0);
+
+  let intervalId;
+  
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     axios
@@ -45,14 +19,53 @@ const CountdownTimer = ({ productId, timer, handleWinner }) => {
           res.data.expirationDateInMilliseconds;
         setExpirationDate(expirationDateInMilliseconds);
       });
-  }, []);
 
-  setInterval(function () {
-    const date = new Date().getTime();
-    // const result = Math.max(expirationDate - date, 0)
-    const result = expirationDate - date;
-    setCountdown(result);
-  }, 1000);
+      return () => {
+        clearInterval(intervalId)
+      }
+  }, [productId]);
+
+  // setInterval(function () {
+  //   const date = new Date().getTime();
+  //   // const result = Math.max(expirationDate - date, 0)
+  //   const result = expirationDate - date;
+  //   setCountdown(result);
+  // }, 1000);
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const date = new Date().getTime();
+      const result = expirationDate - date;
+      setCountdown(result);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId); // Clear the interval when the component unmounts
+    };
+  }, [expirationDate]);
+
+  useEffect(() => {
+    if (countdown <= 0) {
+      // handleWinner();
+      console.log('done')
+    }
+  }, [countdown]);
+
+
+  // const handleWinner = () => {
+  //   console.log('you won');
+  //   // Send user an email?
+  //   productService
+  //     .updateWinner(productId, currentBidder)
+  //     .then(() => {
+  //       // Handle any other logic when the winner is updated
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   }
+      
+    
 
   const formatTime = (timeInMilliseconds) => {
     const totalSeconds = Math.floor(timeInMilliseconds / 1000);
@@ -74,6 +87,7 @@ const CountdownTimer = ({ productId, timer, handleWinner }) => {
       <p>{countdown > 0 ? formatTime(countdown) : "Product expired"}</p>
     </div>
   );
-};
+  }
+
 
 export default CountdownTimer;

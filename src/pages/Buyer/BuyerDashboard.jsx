@@ -20,8 +20,30 @@ function BuyerDashboard() {
     getAllProducts();
   }, []);
 
+  const isCountdownExpired = (expirationDate) => {
+    const currentData = new Date().getTime();
+    return expirationDate <= currentData;
+  };
+
+  const activeProducts = products.filter(
+    (product) => !product.sold && !product.auctionEnded
+  );
+
+
   return (
     <div>
+
+      <h1>Buyer dashboard</h1>
+      <div>
+        {activeProducts.map((product) => (
+          <div key={product._id}>
+            <img src={product.imageUrl} alt={product.productName} />
+            <h1>{product.productName}</h1>
+            <h3>{product.description}</h3>
+            <Link to={`/buyer/${product._id}`}>
+              <button>View product</button>
+            </Link>
+
     <div className="ml-10 mr-10">
     <div className="lg:flex lg:items-center lg:justify-between">
       <div className="min-w-0 flex-1">
@@ -65,6 +87,7 @@ function BuyerDashboard() {
               </div>
               <p className="text-sm font-medium text-gray-900">{product.price}</p>
             </div>
+
           </div>
         ))}
       </div>

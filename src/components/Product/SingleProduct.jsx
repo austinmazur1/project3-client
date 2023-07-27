@@ -12,6 +12,7 @@ const SingleProduct = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [product, setProduct] = useState({});
   const [seller, setSeller] = useState({});
+  const [winner, setWinner] = useState(null);
   const [currentBidder, setCurrentBidder] = useState(null);
   const [currentPrice, setCurrentPrice] = useState(0);
   const [message, setMessage] = useState("");
@@ -52,6 +53,22 @@ const SingleProduct = () => {
     }
   };
 
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetchUpdatedCurrentPrice();
+  //     setServerMessage("");
+  //   }, 5000); // Fetch updated current price every 5 seconds
+
+  //   return () => {
+  //     clearInterval(intervalId); // Clear the interval when the component unmounts
+  //   };
+  // }, []);
+
+  const handleWinner = () => {
+    console.log('you won');
+    // Send user an email?
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchUpdatedCurrentPrice();
@@ -65,24 +82,46 @@ const SingleProduct = () => {
 
   const handleBid = (e) => {
     e.preventDefault();
+
     productService
-      .updateBid(id, currentPrice, user._id)
+      .updateWinner(id, currentBidder)
       .then(() => {
-        setCurrentPrice(currentPrice);
-        console.log(typeof currentPrice);
+        // Handle any other logic when the winner is updated
       })
       .catch((error) => {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          setServerMessage(error.response.data.message);
-        }
-        console.error("Error updating bid:", error);
-      })
-      .finally(setServerMessage(""));
-  };
+        console.log(error);
+      });
+    }
+      
+    
+
+const handleBid = (e) => {
+  e.preventDefault();
+  productService
+    .updateBid(id, currentPrice, user._id)
+    .then(() => {
+      setCurrentPrice(currentPrice);
+      console.log(typeof currentPrice);
+    })
+    .catch((error) => {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        setServerMessage(error.response.data.message); // Set the error message from the API response
+      } else {
+        setServerMessage("Error updating bid"); // Set a generic error message if no specific message is available
+      }
+      console.error("Error updating bid:", error);
+    })
+    .finally(() => {
+      // Clear the server message after some time
+      setTimeout(() => {
+        setServerMessage("");
+      }, 5000);
+    });
+};
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -107,7 +146,7 @@ const SingleProduct = () => {
     productService
       .deleteProject(id)
       .then(() => {
-        navigate(`/seller/dashboard/${user._id}`);
+        navigate("/seller/dashboard");
       })
       .catch((error) => {
         console.error("Error deleting product:", error);
@@ -143,6 +182,65 @@ const SingleProduct = () => {
   }
 
   return (
+
+//     <div>
+//       <img src={product.imageUrl} alt={product.name} />
+//       <h1>{product.productName}</h1>
+//       <h3>{product.description}</h3>
+//       <p>Starting price: {product.startingPrice}</p>
+//       <p>Current price: {updatedCurrentPrice}</p>
+//       <p>Duration: {product.duration} Minutes</p>
+//       <p>Time left: {<CountdownTimer handleWinner={handleWinner} productId={id} timer={product.timer} currentBidder={currentBidder} />}</p>
+//       <p>{product.auctionStarted}</p>
+//       <p>{product.auctionEnded}</p>
+//       {currentBidder ? (
+//         <p>Highest bidder: {currentBidder.name}</p>
+//       ) : (
+//         <p>No bidders</p>
+//       )}
+
+//       {!user.seller ? (
+//         <>
+//           <h4>Seller: {seller.name}</h4>
+//           <h4>{seller.email}</h4>
+//           <form onSubmit={handleBid}>
+//             {serverMessage && <p>{serverMessage}</p>}
+//             <label>
+//               Bid:
+//               <input
+//                 type="number"
+//                 value={currentPrice}
+//                 placeholder={`${product.startingPrice}`}
+//                 onChange={handlePriceChange}
+//               />
+//             </label>
+//             <p>{message}</p>
+//             <button type="submit">Place a bid</button>
+//           </form>
+//         </>
+//       ) : (
+//         <>
+//           <form onSubmit={handleUpdate}>
+//             <label>Product name</label>
+//             <input
+//               type="text"
+//               value={updateName}
+//               placeholder={product.productName}
+//               onChange={handleNameUpdate}
+//             />
+//             <label>Description</label>
+//             <button onClick={handleDelete}>Delete product</button>
+//             <input
+//               type="text"
+//               value={updateDescription}
+//               placeholder={product.description}
+//               onChange={handleDescriptionUpdate}
+//             />
+//             <button type="submit">Save changes</button>
+//           </form>
+//         </>
+//       )}
+
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="w-4/5 p-4 bg-white rounded-lg shadow-md">
         <div className="flex items-center mb-4">
