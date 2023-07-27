@@ -10,7 +10,7 @@ function IsSeller({ children }) {
   if (isSeller) {
     return children
   } else if(isBuyer) {
-    return <Navigate to="/buyer" />
+    return <Navigate to="/buyer/dashboard" />
   }
 }
 
