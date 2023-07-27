@@ -68,6 +68,7 @@ const SingleProduct = () => {
   const handleWinner = () => {
     console.log('you won');
     // Send user an email?
+  }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -80,18 +81,18 @@ const SingleProduct = () => {
     };
   }, []);
 
-  const handleBid = (e) => {
-    e.preventDefault();
+  // const handleBid = (e) => {
+  //   e.preventDefault();
 
-    productService
-      .updateWinner(id, currentBidder)
-      .then(() => {
-        // Handle any other logic when the winner is updated
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }
+  //   productService
+  //     .updateWinner(id, currentBidder)
+  //     .then(() => {
+  //       // Handle any other logic when the winner is updated
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   }
       
     
 
@@ -363,4 +364,5 @@ const handleBid = (e) => {
     </div>
   );
 };
+
 export default SingleProduct;
