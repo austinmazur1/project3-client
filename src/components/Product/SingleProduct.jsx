@@ -63,6 +63,14 @@ const SingleProduct = () => {
   }, []);
 
 
+// const handleWinner = () => {
+//   console.log('you won');
+//   // Send user an email?
+//   productService
+//   .updateWinner()
+
+// }
+
   const handleBid = (e) => {
     e.preventDefault();
     productService
@@ -148,8 +156,8 @@ const SingleProduct = () => {
       <h3>{product.description}</h3>
       <p>Starting price: {product.startingPrice}</p>
       <p>Current price: {updatedCurrentPrice}</p>
-      <p>Duration: {product.duration}</p>
-      <p>Time left: {product.timer}</p>
+      <p>Duration: {product.duration} Minutes</p>
+      <p>Time left: {<CountdownTimer productId={id} timer={product.timer} />}</p>
       <p>{product.auctionStarted}</p>
       <p>{product.auctionEnded}</p>
       {currentBidder ? (
@@ -157,7 +165,7 @@ const SingleProduct = () => {
       ) : (
         <p>No bidders</p>
       )}
-      <CountdownTimer productId={id} timer={product.timer}/>
+
       {!user.seller ? (
         <>
           <h4>Seller: {seller.name}</h4>
