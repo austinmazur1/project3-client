@@ -17,7 +17,7 @@ function Navbar() {
       
     <img
           className="mx-auto h-20 w-auto"
-          src="AuctionEra Logo - white back.png"
+          src="../AuctionEra Logo - white back.png"
           alt="AuctionEra"
         />
     </a>
