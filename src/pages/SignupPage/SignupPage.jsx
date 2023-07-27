@@ -48,7 +48,7 @@ function SignupPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto h-20 w-auto"
-          src="AuctionEra Small logo.jpg"
+          src="../AuctionEra Small logo.jpg"
           alt="AuctionEra"
         />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-red-700">
