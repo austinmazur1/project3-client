@@ -6,6 +6,7 @@ import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 
 import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer"
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 import AddProductPage from "./pages/AddProductPage";
@@ -99,6 +100,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </div>
   );
 }
