@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Assuming you use Axios for HTTP requests
 
@@ -11,14 +10,6 @@ const ProfilePage = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
-  const [address, setAddress] = useState({
-    country: "",
-    city: "",
-    street: "",
-    houseNumber: "",
-    additional: "",
-    zipCode: "",
-  });
 
   // Fetch user data from the backend when the component mounts
   useEffect(() => {
@@ -29,16 +20,6 @@ const ProfilePage = () => {
     try {
       const response = await axios.get("/api/user"); // Replace '/api/user' with your backend API endpoint to fetch user data
       setUserData(response.data);
-      setAddress(
-        response.data.address || {
-          country: "",
-          city: "",
-          street: "",
-          houseNumber: "",
-          additional: "",
-          zipCode: "",
-        }
-      );
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -52,16 +33,6 @@ const ProfilePage = () => {
     setEditMode(false);
     // Reset any changes made by reverting to the original user data
     fetchUserData();
-    setAddress(
-      userData.address || {
-        country: "",
-        city: "",
-        street: "",
-        houseNumber: "",
-        additional: "",
-        zipCode: "",
-      }
-    );
   };
 
   const handleSaveClick = async () => {
@@ -80,12 +51,8 @@ const ProfilePage = () => {
         }));
       }
 
-      // Update other user data (name, email, dateOfBirth, etc.)
+      // Update other user data (first name, last name, email, dateOfBirth, etc.)
       await axios.put("/api/user", userData); // Replace '/api/user' with your backend API endpoint to update user data
-
-      // Update the address separately
-      await axios.put("/api/user/address", address); // Replace '/api/user/address' with your backend API endpoint to update the address
-
       setEditMode(false);
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -127,37 +94,17 @@ const ProfilePage = () => {
     }
   };
 
-  const handleAddressChange = (event) => {
-    const { name, value } = event.target;
-    setAddress((prevAddress) => ({
-      ...prevAddress,
-      [name]: value,
-    }));
-  };
-
-  // Save the edited address
-  const handleAddressSave = async () => {
-    try {
-      // Update the address separately
-      await axios.put("/api/user/address", address); // Replace '/api/user/address' with your backend API endpoint to update the address
-
-      setEditMode(false);
-    } catch (error) {
-      console.error("Error updating address:", error);
-    }
-  };
-
   return (
-    <div>
-      <h1>Profile Page</h1>
-      <div>
-        <h2>Personal Information</h2>
+    <div className="container mx-auto px-4 py-8 w-9/12">
+      <h1 className="text-3xl font-bold mb-6">Profile Page</h1>
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
         {/* Display existing profile picture (if available) */}
         {userData.profilePicture && (
           <img
             src={userData.profilePicture}
             alt="Profile"
-            style={{ width: "150px", height: "150px", borderRadius: "50%" }}
+            className="w-32 h-32 rounded-full mb-4"
           />
         )}
         {editMode ? (
@@ -166,139 +113,146 @@ const ProfilePage = () => {
             type="file"
             accept="image/*"
             onChange={handleProfilePictureChange}
+            className="mb-4 justify-start"
           />
         ) : null}
-        <p>Name: {userData.name}</p>
-        <p>Email: {userData.email}</p>
-        <p>Date of Birth: {userData.dateOfBirth}</p>
-        {editMode ? (
-          // Input fields for edit mode
-          <>
+        <div className="mb-4">
+          <label className="block mb-1 text-gray-600">First Name:</label>
+          {editMode ? (
+            // Input field for first name in edit mode
             <input
               type="text"
-              name="name"
-              value={userData.name}
+              name="firstName"
+              value={userData.firstName}
               onChange={handleInputChange}
+              className="w-9/12 border rounded-md py-2 px-3"
             />
+          ) : (
+            <p>{userData.firstName}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 text-gray-600">Last Name:</label>
+          {editMode ? (
+            // Input field for last name in edit mode
+            <input
+              type="text"
+              name="lastName"
+              value={userData.lastName}
+              onChange={handleInputChange}
+              className="w-9/12 border rounded-md py-2 px-3"
+            />
+          ) : (
+            <p>{userData.lastName}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 text-gray-600">Email:</label>
+          {editMode ? (
+            // Input field for email in edit mode
             <input
               type="email"
               name="email"
               value={userData.email}
               onChange={handleInputChange}
+              className="w-9/12 border rounded-md py-2 px-3"
             />
+          ) : (
+            <p>{userData.email}</p>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1 text-gray-600">Date of Birth:</label>
+          {editMode ? (
+            // Input field for date of birth in edit mode
             <input
               type="date"
               name="dateOfBirth"
               value={userData.dateOfBirth}
               onChange={handleInputChange}
+              className="w-9/12 border rounded-md py-2 px-3"
             />
-          </>
-        ) : null}
+          ) : (
+            <p>{userData.dateOfBirth}</p>
+          )}
+        </div>
         {editMode ? (
           // Save and Cancel buttons for edit mode
-          <>
-            <button onClick={handleSaveClick}>Save</button>
-            <button onClick={handleCancelClick}>Cancel</button>
-          </>
+          <div>
+            <button
+              onClick={handleSaveClick}
+              class="m-4 inline-flex items-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Save
+            </button>
+            <button
+              onClick={handleCancelClick}
+              className="bg-gray-500 hover:bg-gray-600 text-white py-3 px-2 rounded"
+            >
+              Cancel
+            </button>
+          </div>
         ) : (
           // Edit button when not in edit mode
-          <button onClick={handleEditClick}>Edit</button>
+          <button
+            onClick={handleEditClick}
+            class="inline-flex items-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Edit
+          </button>
         )}
       </div>
 
       {/* Change Password Section */}
-      {editMode ? (
-        <div>
-          <h2>Change Password</h2>
-          <input
-            type="password"
-            name="currentPassword"
-            placeholder="Current Password"
-            value={passwordFields.currentPassword}
-            onChange={handlePasswordChange}
-          />
-          <input
-            type="password"
-            name="newPassword"
-            placeholder="New Password"
-            value={passwordFields.newPassword}
-            onChange={handlePasswordChange}
-          />
-          <input
-            type="password"
-            name="confirmNewPassword"
-            placeholder="Confirm New Password"
-            value={passwordFields.confirmNewPassword}
-            onChange={handlePasswordChange}
-          />
-          <button onClick={handlePasswordSave}>Change Password</button>
+      {editMode && (
+        <div className="bg-white p-6 mt-4 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+          <div className="mb-4">
+            <label className="block mb-1 text-gray-600">
+              Current Password:
+            </label>
+            <input
+              type="password"
+              name="currentPassword"
+              placeholder="Current Password"
+              value={passwordFields.currentPassword}
+              onChange={handlePasswordChange}
+              className="w-full border rounded-md py-2 px-3"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 text-gray-600">New Password:</label>
+            <input
+              type="password"
+              name="newPassword"
+              placeholder="New Password"
+              value={passwordFields.newPassword}
+              onChange={handlePasswordChange}
+              className="w-full border rounded-md py-2 px-3"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 text-gray-600">
+              Confirm New Password:
+            </label>
+            <input
+              type="password"
+              name="confirmNewPassword"
+              placeholder="Confirm New Password"
+              value={passwordFields.confirmNewPassword}
+              onChange={handlePasswordChange}
+              className="w-full border rounded-md py-2 px-3"
+            />
+          </div>
+          <button
+            onClick={handlePasswordSave}
+            class="inline-flex items-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Change Password
+          </button>
         </div>
-      ) : null}
+      )}
 
-      {/* Address Section */}
-      <div>
-        <h2>Address</h2>
-        {editMode ? (
-          // Input fields for address in edit mode
-          <>
-            <input
-              type="text"
-              name="country"
-              placeholder="Country"
-              value={address.country}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              name="city"
-              placeholder="City"
-              value={address.city}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              name="street"
-              placeholder="Street"
-              value={address.street}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              name="houseNumber"
-              placeholder="House Number"
-              value={address.houseNumber}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              name="additional"
-              placeholder="Additional Address (Optional)"
-              value={address.additional}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              name="zipCode"
-              placeholder="ZIP Code"
-              value={address.zipCode}
-              onChange={handleAddressChange}
-            />
-            <button onClick={handleAddressSave}>Save Address</button>
-          </>
-        ) : (
-          // Display address when not in edit mode
-          <>
-            <p>Country: {userData.address?.country}</p>
-            <p>City: {userData.address?.city}</p>
-            <p>Street: {userData.address?.street}</p>
-            <p>House Number: {userData.address?.houseNumber}</p>
-            {userData.address?.additional && (
-              <p>Additional: {userData.address?.additional}</p>
-            )}
-            <p>ZIP Code: {userData.address?.zipCode}</p>
-          </>
-        )}
-      </div>
       {/* Add more sections for Contact Information, etc. */}
     </div>
   );
