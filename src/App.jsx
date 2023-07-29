@@ -23,7 +23,7 @@ function App() {
 
       <Routes>
         <Route
-          path="/profile"
+          path="/profile/:id"
           element={
             <IsPrivate>
               <ProfilePage />

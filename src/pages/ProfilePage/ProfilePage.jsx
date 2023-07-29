@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios"; // Assuming you use Axios for HTTP requests
+import { AuthContext } from "../../context/auth.context";
 
 const ProfilePage = () => {
+  const {user} = useContext(AuthContext)
   const [userData, setUserData] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
@@ -13,13 +15,16 @@ const ProfilePage = () => {
 
   // Fetch user data from the backend when the component mounts
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    if (user && user._id) {
+      fetchUserData();
+    }
+  }, [user]);
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get("/api/user"); // Replace '/api/user' with your backend API endpoint to fetch user data
+      const response = await axios.get(`http://localhost:5005/profile/${user._id}`); // Replace '/api/user' with your backend API endpoint to fetch user data
       setUserData(response.data);
+      console.log(response.data.user)
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -93,20 +98,20 @@ const ProfilePage = () => {
       console.error("Error changing password:", error);
     }
   };
-
+console.log(userData)
   return (
     <div className="container mx-auto px-4 py-8 w-9/12">
       <h1 className="text-3xl font-bold mb-6">Profile Page</h1>
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
         {/* Display existing profile picture (if available) */}
-        {userData.profilePicture && (
+        {/* {userData.user.profilePicture && (
           <img
-            src={userData.profilePicture}
+            src={userData.user.profilePicture}
             alt="Profile"
             className="w-32 h-32 rounded-full mb-4"
           />
-        )}
+        )} */}
         {editMode ? (
           // Input field for profile picture upload
           <input
@@ -123,17 +128,17 @@ const ProfilePage = () => {
             <input
               type="text"
               name="firstName"
-              value={userData.firstName}
+              value={userData.user.firstName}
               onChange={handleInputChange}
               className="w-9/12 border rounded-md py-2 px-3"
             />
           ) : (
-            <p>{userData.firstName}</p>
+            <p>{userData.user.name}</p>
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 text-gray-600">Last Name:</label>
-          {editMode ? (
+          {/* <label className="block mb-1 text-gray-600">Last Name:</label> */}
+          {/* {editMode ? (
             // Input field for last name in edit mode
             <input
               type="text"
@@ -144,7 +149,7 @@ const ProfilePage = () => {
             />
           ) : (
             <p>{userData.lastName}</p>
-          )}
+          )} */}
         </div>
         <div className="mb-4">
           <label className="block mb-1 text-gray-600">Email:</label>
@@ -153,27 +158,27 @@ const ProfilePage = () => {
             <input
               type="email"
               name="email"
-              value={userData.email}
+              value={userData.user.email}
               onChange={handleInputChange}
               className="w-9/12 border rounded-md py-2 px-3"
             />
           ) : (
-            <p>{userData.email}</p>
+            <p>{userData.user.email}</p>
           )}
         </div>
         <div className="mb-4">
-          <label className="block mb-1 text-gray-600">Date of Birth:</label>
+          <label className="block mb-1 text-gray-600">Address:</label>
           {editMode ? (
             // Input field for date of birth in edit mode
             <input
               type="date"
               name="dateOfBirth"
-              value={userData.dateOfBirth}
+              value={userData.user.dateOfBirth}
               onChange={handleInputChange}
               className="w-9/12 border rounded-md py-2 px-3"
             />
           ) : (
-            <p>{userData.dateOfBirth}</p>
+            <p>{userData.user.address}</p>
           )}
         </div>
         {editMode ? (

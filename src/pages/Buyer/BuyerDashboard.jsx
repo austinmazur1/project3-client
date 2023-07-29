@@ -2,9 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import productService from "../../services/product.service";
 import { AuthContext } from "../../context/auth.context";
-
+import Loading from "../../components/Loading/Loading";
 function BuyerDashboard() {
   const { user } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true)
   const [products, setProducts] = useState([]);
 
   const getAllProducts = () => {
@@ -12,6 +13,7 @@ function BuyerDashboard() {
       .getAllProductsBuyer(user._id)
       .then((response) => {
         setProducts(response.data);
+        setIsLoading(false)
       })
       .catch((error) => console.log(error));
   };
@@ -29,6 +31,9 @@ function BuyerDashboard() {
     (product) => !product.sold && !product.auctionEnded
   );
 
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div>
